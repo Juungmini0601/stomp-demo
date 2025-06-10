@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: message-jwt-example
+  datasource:
+    hikari:
+      jdbc-url: jdbc:mysql://localhost:13306/message
+      username: root
+      password: qwer1234
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      pool-name: ConnectionPool
+      minimum-idle: 10 # 최소 개수
+      maximum-pool-size: 20
+      idle-timeout: 60000 # 1분동안 사용안하면 커넥션 반납
+      connection-timeout: 30000
+  jpa:
+    show-sql: true
+    open-in-view: false
+    hibernate:
+      ddl-auto: validate
+    properties:
+      hibernate:
+        format_sql: true
+  sql:
+    init:
+      mode: always
+
+  data:
+    redis:
+      host: localhost
+      port: 16379
+      repositories:
+        enabled: false # Spring Data Redis 사용 X
+
+# 디버깅용 로그 설정
+#logging:
+#  level:
+#    org.springframework.web.socket: DEBUG
+#    org.springframework.messaging: DEBUG
+#    org.springframework.security: DEBUG
+#    io.jungmini: DEBUG
+#    org.apache.tomcat.websocket: DEBUG
+
+
+jwt:
+  secret: Wmee6jKz8VpGbWnHhw/ksUeZ6vF0z457du2pjx7d7uc=
+  expiration: 86400000

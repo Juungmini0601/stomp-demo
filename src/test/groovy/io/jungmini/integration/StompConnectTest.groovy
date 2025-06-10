@@ -1,6 +1,6 @@
 package io.jungmini.integration
 
-import io.jungmini.controller.MessageController
+import io.jungmini.stomp.controller.MessageController
 import io.jungmini.util.StompUtil
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -12,6 +12,15 @@ import spock.lang.Specification
 import java.lang.reflect.Type
 import java.util.concurrent.TimeUnit
 
+/**
+ *  1. 웹소켓 연결
+ *  2. 서버에서 웹소켓 커넥션을 들고 있음
+ *
+ *  - 클라이언트가 원할때 데이터 푸쉬
+ *  - 서버가 원할대 데이터 푸쉬
+ *
+ *  웹소켓 연결해서 들고 있어야함
+ */
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 class StompConnectTest extends Specification {
     @LocalServerPort

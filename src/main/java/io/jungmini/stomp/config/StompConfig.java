@@ -1,18 +1,26 @@
-package io.jungmini.config;
+package io.jungmini.stomp.config;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.ChannelRegistration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
 import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
 import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
 import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
+import io.jungmini.stomp.component.TokenChannelInterceptor;
 
 @Configuration
 @EnableWebSocketMessageBroker // Stomp 사용하기 위한 컨피그
 public class StompConfig implements WebSocketMessageBrokerConfigurer {
 
 	private static final Logger log = LoggerFactory.getLogger(StompConfig.class);
+	private final TokenChannelInterceptor jwtChannelInterceptor;
+
+	public StompConfig(TokenChannelInterceptor jwtChannelInterceptor) {
+		this.jwtChannelInterceptor = jwtChannelInterceptor;
+	}
 
 	// 브라우저에서 /ws엔드포인트로 웹소켓 연결하도록 설정
 	@Override
@@ -32,4 +40,10 @@ public class StompConfig implements WebSocketMessageBrokerConfigurer {
 		//         .setClientLogin("user")
 		//         .setClientPasscode("password");
 	}
+
+	@Override
+	public void configureClientInboundChannel(ChannelRegistration registration) {
+		registration.interceptors(jwtChannelInterceptor);
+	}
+
 }

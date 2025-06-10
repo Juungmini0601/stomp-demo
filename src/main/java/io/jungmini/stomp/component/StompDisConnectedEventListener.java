@@ -1,4 +1,4 @@
-package io.jungmini.component;
+package io.jungmini.stomp.component;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

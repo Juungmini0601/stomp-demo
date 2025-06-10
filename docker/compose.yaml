@@ -1,0 +1,32 @@
+services:
+  mysql:
+    image: mysql:8.0.40
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: qwer1234
+      MYSQL_DATABASE: message
+    ports:
+      - "13306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+  redis:
+    image: redis:7.4.1
+    restart: unless-stopped
+    ports:
+      - "16379:6379"
+    volumes:
+      - redis_data:/data
+
+  redis-insight:
+    image: redis/redisinsight:2.64.1
+    restart: unless-stopped
+    ports:
+      - "15540:5540"
+    volumes:
+      - redis_insight_data:/data
+
+volumes:
+  mysql_data:
+  redis_data:
+  redis_insight_data:
