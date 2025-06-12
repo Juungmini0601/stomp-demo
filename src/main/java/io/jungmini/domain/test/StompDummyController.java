@@ -1,4 +1,4 @@
-package io.jungmini.stomp.controller;
+package io.jungmini.domain.test;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -7,9 +7,9 @@ import org.springframework.messaging.handler.annotation.SendTo;
 import org.springframework.stereotype.Controller;
 
 @Controller
-public class MessageController {
+public class StompDummyController {
 
-	private static final Logger log = LoggerFactory.getLogger(MessageController.class);
+	private static final Logger log = LoggerFactory.getLogger(StompDummyController.class);
 
 	@MessageMapping("/ping")
 	@SendTo("/topic/pong")

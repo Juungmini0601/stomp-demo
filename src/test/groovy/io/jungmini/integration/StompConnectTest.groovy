@@ -1,6 +1,6 @@
 package io.jungmini.integration
 
-import io.jungmini.stomp.controller.MessageController
+import io.jungmini.domain.test.StompDummyController
 import io.jungmini.util.StompUtil
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.server.LocalServerPort
@@ -57,7 +57,7 @@ class StompConnectTest extends Specification {
         client.session.subscribe("/topic/pong", new StompFrameHandler() {
             @Override
             Type getPayloadType(StompHeaders headers) {
-                return MessageController.PongResponse.class
+                return StompDummyController.PongResponse.class
             }
 
             @Override
@@ -70,7 +70,7 @@ class StompConnectTest extends Specification {
         client.session.send("/app/ping", new byte[0]);
 
         then:
-        def result = client.queue.poll(3, TimeUnit.SECONDS) as MessageController.PongResponse
+        def result = client.queue.poll(3, TimeUnit.SECONDS) as StompDummyController.PongResponse
         result.message() == "pong";
     }
 }

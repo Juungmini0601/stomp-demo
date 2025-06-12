@@ -1,4 +1,4 @@
-package io.jungmini.domain.liveboard;
+package io.jungmini.domain.liveboard.model;
 
 import java.util.Objects;
 

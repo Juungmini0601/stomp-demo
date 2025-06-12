@@ -1,4 +1,4 @@
-package io.jungmini.domain.liveboard;
+package io.jungmini.domain.liveboard.model;
 
 import io.jungmini.domain.user.BaseEntity;
 import jakarta.persistence.Column;
