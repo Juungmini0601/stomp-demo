@@ -5,6 +5,7 @@ import java.util.Collection;
 import org.springframework.security.authentication.AbstractAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
 
+// 인증 성공, 인증 실패
 public class JwtAuthenticationToken extends AbstractAuthenticationToken {
 
 	private final Object principal;

@@ -7,8 +7,8 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import io.jungmini.user.UserEntity;
-import io.jungmini.user.UserRole;
+import io.jungmini.domain.user.UserEntity;
+import io.jungmini.domain.user.UserRole;
 
 public class CustomUserDetails implements UserDetails {
 

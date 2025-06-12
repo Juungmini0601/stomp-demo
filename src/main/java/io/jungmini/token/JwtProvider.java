@@ -17,8 +17,7 @@ import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.MalformedJwtException;
 import io.jsonwebtoken.UnsupportedJwtException;
 import io.jsonwebtoken.security.Keys;
-import io.jungmini.user.UserId;
-import io.jungmini.user.UserRole;
+import io.jungmini.domain.user.UserRole;
 
 @Component
 public class JwtProvider implements TokenProvider {
@@ -37,17 +36,17 @@ public class JwtProvider implements TokenProvider {
 	}
 
 	@Override
-	public String generateAccessToken(UserId userId) {
+	public String generateAccessToken(Long userId) {
 		return generateAccessToken(userId, List.of(UserRole.ROLE_USER));
 	}
 
 	@Override
-	public String generateAccessToken(UserId userId, List<UserRole> roles) {
+	public String generateAccessToken(Long userId, List<UserRole> roles) {
 		Date now = new Date();
 		Date expirationDate = new Date(now.getTime() + jwtExpiration);
 
 		return Jwts.builder()
-			.subject(userId.id().toString())
+			.subject(userId.toString())
 			.claim(ClaimKey.ROLES.key(), roles)
 			.claim(ClaimKey.TYPE.key(), TokenType.ACCESS.name())
 			.issuedAt(now)
@@ -67,9 +66,9 @@ public class JwtProvider implements TokenProvider {
 	}
 
 	@Override
-	public UserId getUserIdFromToken(String token) {
+	public Long getUserIdFromToken(String token) {
 		String userIdString = getClaimsFromToken(token).getSubject();
-		return new UserId(Long.parseLong(userIdString));
+		return Long.parseLong(userIdString);
 	}
 
 	@Override

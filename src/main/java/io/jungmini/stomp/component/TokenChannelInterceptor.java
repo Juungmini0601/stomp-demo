@@ -13,12 +13,11 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
+import io.jungmini.domain.user.UserEntity;
+import io.jungmini.domain.user.UserRole;
 import io.jungmini.security.model.CustomUserDetails;
 import io.jungmini.security.model.JwtAuthenticationToken;
 import io.jungmini.token.TokenProvider;
-import io.jungmini.user.UserEntity;
-import io.jungmini.user.UserId;
-import io.jungmini.user.UserRole;
 
 /**
  * WebSocket 메시지 수신시 JWT를 검증하여 인증 정보를 SecurityConfig에 저장 <br/>
@@ -34,7 +33,8 @@ public class TokenChannelInterceptor implements ChannelInterceptor {
 		this.tokenProvider = jwtProvider;
 	}
 
-	// 태정 나는 이제 웹소켓할때 토큰 무조건 있어야 함
+	// 웹소켓 메세지가 들어오고 나가기 전에 호출되는 인터셉터, 저희 실제 MessageController에서 요청을 받기 전에 여기를 거쳤다가 들어감
+	// 클라이언트가 보낸 Token기반으로 Secuirty Authentication 객체를 만들어서 SecurityContextHolder에 넣어 놔야 WebSocketSecurityConfig의 컨피그가 동작함
 	@Override
 	public Message<?> preSend(Message<?> message, MessageChannel channel) {
 		StompHeaderAccessor accessor = StompHeaderAccessor.wrap(message);
@@ -50,15 +50,16 @@ public class TokenChannelInterceptor implements ChannelInterceptor {
 
 			if (StringUtils.hasText(token) && tokenProvider.validateToken(token)) {
 				// JWT에서 사용자 정보 추출
-				UserId userId = tokenProvider.getUserIdFromToken(token);
+				Long userId = tokenProvider.getUserIdFromToken(token);
 				UserRole role = tokenProvider.getRolesFromToken(token).get(0);
-				JwtAuthenticationToken.authenticated(userId, null);
-				CustomUserDetails customUserDetails = new CustomUserDetails(new UserEntity(userId.id(), role));
+				// UsernamePasswordAuthenticationToken
+				CustomUserDetails customUserDetails = new CustomUserDetails(new UserEntity(userId, role));
 				Collection<? extends GrantedAuthority> authorities = customUserDetails.getAuthorities();
 
+				// Auhtentication을 구현한 객체면
 				JwtAuthenticationToken authenticationToken =
 					JwtAuthenticationToken.authenticated(customUserDetails, authorities);
-				// STOMP 세션에 인증 정보 설정
+				// STOMP 세션에 인증 정보 설정(Spring Security에서 인정해주는 Authentication 객체)
 				accessor.setUser(authenticationToken);
 				log.info("WebSocket Authentication Success");
 			} else {

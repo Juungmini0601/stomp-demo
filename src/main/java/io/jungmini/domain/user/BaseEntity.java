@@ -1,4 +1,4 @@
-package io.jungmini.user;
+package io.jungmini.domain.user;
 
 import java.time.LocalDateTime;
 

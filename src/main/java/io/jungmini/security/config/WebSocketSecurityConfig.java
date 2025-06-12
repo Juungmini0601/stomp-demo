@@ -27,12 +27,14 @@ public class WebSocketSecurityConfig implements WebSocketMessageBrokerConfigurer
 		this.applicationContext = applicationContext;
 	}
 
+	// 실제 웹소켓 관련해서 시큐리티 기반으로 인증 인가 설정 하는 부분
 	@Bean
 	public AuthorizationManager<Message<?>> messageAuthorizationManager() {
 		MessageMatcherDelegatingAuthorizationManager.Builder messages =
 			MessageMatcherDelegatingAuthorizationManager.builder();
 
 		messages
+			// Command 기반으로도 할 수 있음
 			.simpTypeMatchers(
 				SimpMessageType.CONNECT,
 				SimpMessageType.DISCONNECT,
@@ -40,8 +42,7 @@ public class WebSocketSecurityConfig implements WebSocketMessageBrokerConfigurer
 				SimpMessageType.UNSUBSCRIBE,
 				SimpMessageType.SUBSCRIBE
 			).permitAll()
-
-			.simpDestMatchers("/app/ping/**").authenticated()
+			// 나가는 부분 들어오는 부분
 			.simpDestMatchers("/app/auth/**").authenticated()
 			.simpDestMatchers("/app/**").permitAll()
 			.simpSubscribeDestMatchers("/topic/auth/**").authenticated()

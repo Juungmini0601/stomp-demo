@@ -30,6 +30,14 @@ spring:
       port: 16379
       repositories:
         enabled: false # Spring Data Redis 사용 X
+      database: 0
+      timeout: 3000ms
+      lettuce:
+        pool:
+          max-active: 8
+          max-idle: 8
+          min-idle: 0
+          max-wait: -1ms
 
 # 디버깅용 로그 설정
 #logging:

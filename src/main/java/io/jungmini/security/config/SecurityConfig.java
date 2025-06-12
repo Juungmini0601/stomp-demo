@@ -28,7 +28,7 @@ public class SecurityConfig {
 		http
 			.csrf(csrf -> csrf.disable())
 			.authorizeHttpRequests(auth -> auth
-				.requestMatchers("/ws/**").permitAll()
+				.requestMatchers("/ws/**").permitAll() // 비회원 채팅을 지원하기 위함
 				.requestMatchers("/auth/**").permitAll()
 				.requestMatchers("/error/**").permitAll()
 				.requestMatchers("/admin/**").hasRole("ADMIN")

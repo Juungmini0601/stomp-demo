@@ -1,6 +1,5 @@
 package io.jungmini.token
 
-import io.jungmini.user.UserId
 import spock.lang.Specification
 
 class JwtProviderTest extends Specification {
@@ -10,14 +9,14 @@ class JwtProviderTest extends Specification {
 
     def 'JWT 토큰을 정상적으로 생성 파싱 가능하다.'() {
         given:
-        UserId userId = new UserId(1L)
+        Long userId = 1L
 
         when:
         def token = jwtProvider.generateAccessToken(userId)
         def parsedUserId = jwtProvider.getUserIdFromToken(token)
 
         then:
-        parsedUserId.id() == userId.id()
+        parsedUserId == userId
     }
 
 }

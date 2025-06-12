@@ -1,4 +1,4 @@
-package io.jungmini.user;
+package io.jungmini.domain.user;
 
 import java.util.Objects;
 
@@ -12,7 +12,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 
 @Entity
-@Table(name = "message_user")
+@Table(name = "users")
 public class UserEntity extends BaseEntity {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
