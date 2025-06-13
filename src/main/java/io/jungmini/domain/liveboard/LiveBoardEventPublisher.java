@@ -3,8 +3,6 @@ package io.jungmini.domain.liveboard;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
-import io.jungmini.domain.liveboard.model.LiveBoardConnection;
-
 @Component
 public class LiveBoardEventPublisher {
 	private final RedisTemplate<String, Object> redisTemplate;
@@ -13,7 +11,8 @@ public class LiveBoardEventPublisher {
 		this.redisTemplate = redisTemplate;
 	}
 
-	public void publishJoinEvent(Long liveBoardId, LiveBoardConnection connection) {
-
+	public void publishConnectionCount(Long liveBoardId, Long connectionCount) {
+		String channel = String.format("liveboard:%d:users:count", liveBoardId);
+		redisTemplate.convertAndSend(channel, connectionCount);
 	}
 }

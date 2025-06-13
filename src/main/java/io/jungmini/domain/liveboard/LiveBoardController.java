@@ -2,49 +2,44 @@ package io.jungmini.domain.liveboard;
 
 import java.security.Principal;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.messaging.simp.stomp.StompHeaderAccessor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 
-import io.jungmini.domain.liveboard.dto.JoinLiveBoardRequest;
 import io.jungmini.domain.liveboard.model.LiveBoardConnection;
 import io.jungmini.security.model.CustomUserDetails;
-import io.jungmini.util.ServerIdHolder;
 
 @Controller
 public class LiveBoardController {
 
+	private static final Logger log = LoggerFactory.getLogger(LiveBoardController.class);
 	private final LiveBoardService liveBoardService;
-	private final SimpMessagingTemplate messagingTemplate;
+	private final LiveBoardEventPublisher liveBoardEventPublisher;
 
-	public LiveBoardController(LiveBoardService liveBoardService, SimpMessagingTemplate messagingTemplate) {
+	public LiveBoardController(LiveBoardService liveBoardService, LiveBoardEventPublisher liveBoardEventPublisher) {
 		this.liveBoardService = liveBoardService;
-		this.messagingTemplate = messagingTemplate;
+		this.liveBoardEventPublisher = liveBoardEventPublisher;
 	}
 
 	@MessageMapping("/liveboard/{liveBoardId}/join")
 	public void joinLiveBoard(
 		@DestinationVariable Long liveBoardId,
-		@Payload JoinLiveBoardRequest request,
 		StompHeaderAccessor accessor,
 		Principal principal
 	) {
+		log.info("Join LiveBoard [{}] Session Id: [{}]", liveBoardId, accessor.getSessionId());
 		String sessionId = accessor.getSessionId();
 		Long userId = getUserId(principal); // Nullable
-		String globalSessionId = ServerIdHolder.SERVER_ID + "-" + sessionId;
-		// request, sessionId, userId 기반으로 LiveBoardConnection 생성
 		LiveBoardConnection connection = LiveBoardConnection.from(userId, sessionId, liveBoardId);
-		// Redis에 연결 정보 저장
 		liveBoardService.join(connection);
-		// 입장 알림 발송
-
-		// 접속자 수 업데이트
-
+		Long liveBoardConnectionCount = liveBoardService.getConnectionCount(liveBoardId);
+		liveBoardEventPublisher.publishConnectionCount(liveBoardId, liveBoardConnectionCount);
+		log.info("Join Message Publish Success");
 	}
 
 	private Long getUserId(Principal principal) {
