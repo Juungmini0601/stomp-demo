@@ -2,7 +2,7 @@ package io.jungmini.domain.liveboard.model;
 
 import java.time.LocalDateTime;
 
-import io.jungmini.util.ServerIdHolder;
+import io.jungmini.util.GlobalSessionIdGenerator;
 import lombok.Builder;
 import lombok.Getter;
 
@@ -13,6 +13,10 @@ public class LiveBoardConnection {
 	private Long userId; // null 가능
 	private String sessionId;
 	private LocalDateTime connectedAt;
+
+	// for jackson
+	public LiveBoardConnection() {
+	}
 
 	@Builder
 	public LiveBoardConnection(LocalDateTime connectedAt, String globalSessionId, Long liveBoardId, String sessionId,
@@ -25,7 +29,8 @@ public class LiveBoardConnection {
 	}
 
 	public static LiveBoardConnection from(Long userId, String sessionId, Long liveBoardId) {
-		String globalSessionId = ServerIdHolder.SERVER_ID + "-" + sessionId;
+		String globalSessionId = GlobalSessionIdGenerator.generateSessionId(sessionId);
+
 		return builder()
 			.globalSessionId(globalSessionId)
 			.liveBoardId(liveBoardId)

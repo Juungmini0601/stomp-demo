@@ -3,8 +3,7 @@ package io.jungmini.util;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 
-public class ServerIdHolder {
-
+public class GlobalSessionIdGenerator {
 	public static final String SERVER_ID;
 
 	static {
@@ -13,5 +12,9 @@ public class ServerIdHolder {
 		} catch (UnknownHostException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	public static String generateSessionId(String sessionId) {
+		return SERVER_ID + "-" + sessionId;
 	}
 }

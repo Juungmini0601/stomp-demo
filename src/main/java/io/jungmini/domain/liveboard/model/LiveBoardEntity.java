@@ -9,7 +9,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "live_boards")
 public class LiveBoardEntity extends BaseEntity {
@@ -28,16 +31,11 @@ public class LiveBoardEntity extends BaseEntity {
 	protected LiveBoardEntity() {
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public Long getMatchId() {
-		return matchId;
-	}
-
-	public String getName() {
-		return name;
+	@Builder
+	public LiveBoardEntity(Long id, Long matchId, String name) {
+		this.id = id;
+		this.matchId = matchId;
+		this.name = name;
 	}
 
 	@Override

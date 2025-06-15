@@ -40,8 +40,7 @@ class StompUtil {
             }
         })
 
-        StompSession
         def stompSession = connectFuture.get()
-        [queue: blockingQueue, session: stompSession, stompClient: stompClient]
+        return new CustomStompClient(stompClient, blockingQueue, stompSession);
     }
 }

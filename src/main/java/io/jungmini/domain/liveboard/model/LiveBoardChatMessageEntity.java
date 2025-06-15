@@ -7,7 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
+import lombok.Builder;
+import lombok.Getter;
 
+@Getter
 @Entity
 @Table(name = "live_board_chat_messages")
 public class LiveBoardChatMessageEntity extends BaseEntity {
@@ -34,27 +37,19 @@ public class LiveBoardChatMessageEntity extends BaseEntity {
 	protected LiveBoardChatMessageEntity() {
 	}
 
-	public Long getId() {
-		return id;
-	}
-
-	public String getMessage() {
-		return message;
-	}
-
-	public Long getLiveBoardId() {
-		return liveBoardId;
-	}
-
-	public Long getUserId() {
-		return userId;
-	}
-
-	public String getSessionId() {
-		return sessionId;
-	}
-
-	public String getDisplayNickname() {
-		return displayNickname;
+	@Builder
+	public LiveBoardChatMessageEntity(
+		Long id,
+		String displayNickname,
+		Long liveBoardId,
+		String message,
+		String sessionId,
+		Long userId) {
+		this.displayNickname = displayNickname;
+		this.id = id;
+		this.liveBoardId = liveBoardId;
+		this.message = message;
+		this.sessionId = sessionId;
+		this.userId = userId;
 	}
 }
